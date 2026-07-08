@@ -1,14 +1,17 @@
 export const getApiUrl = () => {
   // Use VITE_API_URL from environment variables, with a fallback for local development
-  return import.meta.env.VITE_API_URL || 'https://ngo-b-1.onrender.com';
+  return import.meta.env.VITE_API_URL || 'https://lost';
 };
 
 export const apiRequest = async (endpoint, options = {}) => {
   const url = `${getApiUrl()}${endpoint}`;
   const token = localStorage.getItem('token');
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 15000);
 
   const config = {
     ...options,
+    signal: controller.signal,
     headers: {
       ...options.headers,
     },
@@ -30,28 +33,37 @@ export const apiRequest = async (endpoint, options = {}) => {
     config.headers['Content-Type'] = 'application/json';
   }
 
-  const response = await fetch(url, config);
+  try {
+    const response = await fetch(url, config);
 
-  if (!response.ok) {
-    if (response.status === 404 || response.status === 501) {
-      throw new Error('यह सुविधा अभी प्रक्रिया में है। आगे का काम जारी है।');
+    if (!response.ok) {
+      if (response.status === 404 || response.status === 501) {
+        throw new Error('यह सुविधा अभी प्रक्रिया में है। आगे का काम जारी है।');
+      }
+      let errorMessage = `An error occurred: ${response.statusText}`;
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.message || errorMessage;
+      } catch {
+        // Ignore if response is not JSON
+      }
+      throw new Error(errorMessage);
     }
-    let errorMessage = `An error occurred: ${response.statusText}`;
-    try {
-      const errorData = await response.json();
-      errorMessage = errorData.message || errorMessage;
-    } catch {
-      // Ignore if response is not JSON
+
+    // Handle cases where the response might be empty
+    const contentType = response.headers.get('content-type');
+    if (contentType && contentType.includes('application/json')) {
+      const text = await response.text();
+      return text ? JSON.parse(text) : {}; // Handle empty JSON response
     }
-    throw new Error(errorMessage);
-  }
 
-  // Handle cases where the response might be empty
-  const contentType = response.headers.get('content-type');
-  if (contentType && contentType.includes('application/json')) {
-    const text = await response.text();
-    return text ? JSON.parse(text) : {}; // Handle empty JSON response
+    return response.text(); // Or handle as needed
+  } catch (error) {
+    if (error?.name === 'AbortError') {
+      throw new Error('The server is taking longer than usual. Please wait a moment and try again if it does not complete.');
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeoutId);
   }
-
-  return response.text(); // Or handle as needed
 };

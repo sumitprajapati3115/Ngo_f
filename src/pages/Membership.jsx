@@ -41,6 +41,7 @@ const FreeMemberForm = () => {
   const t = translations[language];
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [isSubmittingLocal, setIsSubmittingLocal] = useState(false);
 
   const schema = useMemo(() => yup.object().shape({
     fullName: yup.string().required(t.form.validation.name_required),
@@ -55,7 +56,7 @@ const FreeMemberForm = () => {
     zipCode: yup.string().required(t.form.validation.zipCode_required),
   }), [t]);
 
-  const { register, handleSubmit, formState: { errors, isSubmitting }, reset } = useForm({
+  const { register, handleSubmit, formState: { errors }, reset } = useForm({
     resolver: yupResolver(schema),
     defaultValues: { gender: '' }
   });
@@ -63,6 +64,12 @@ const FreeMemberForm = () => {
   const onSubmit = async (data) => {
     setError('');
     setSuccess('');
+    setIsSubmittingLocal(true);
+
+    const fallbackTimer = window.setTimeout(() => {
+      setIsSubmittingLocal(false);
+      setError('The server is taking longer than usual. Please wait a moment and try again if it does not complete.');
+    }, 12000);
 
     try {
       const payload = { ...data, membershipPlan: 'free' };
@@ -71,11 +78,15 @@ const FreeMemberForm = () => {
         body: payload,
       });
 
-      const successMessage = result.message || 'Your free membership is now active! Welcome to the foundation. You will receive your certificate via email.';
+      const successMessage = result?.message || 'Your free membership request was submitted successfully.';
       setSuccess(successMessage);
       reset();
     } catch (err) {
-      setError(err.message);
+      const fallbackError = err?.message || 'We could not submit your request right now. Please try again later.';
+      setError(fallbackError);
+    } finally {
+      window.clearTimeout(fallbackTimer);
+      setIsSubmittingLocal(false);
     }
   };
 
@@ -195,8 +206,8 @@ const FreeMemberForm = () => {
                     </div>
 
                     <div className="pt-4">
-                      <button type="submit" disabled={isSubmitting} className="w-full inline-flex justify-center items-center gap-3 rounded-full bg-gradient-to-r from-[#0B2F78] to-[#1340A0] px-8 py-4 text-lg font-bold text-white shadow-lg transition-all duration-300 hover:shadow-2xl hover:shadow-[#0B2F78]/30 hover:-translate-y-1 disabled:opacity-70 disabled:cursor-not-allowed">
-                          {isSubmitting ? 'Processing Application...' : 'Get Free Membership'}
+                      <button type="submit" disabled={isSubmittingLocal} className="w-full inline-flex justify-center items-center gap-3 rounded-full bg-gradient-to-r from-[#0B2F78] to-[#1340A0] px-8 py-4 text-lg font-bold text-white shadow-lg transition-all duration-300 hover:shadow-2xl hover:shadow-[#0B2F78]/30 hover:-translate-y-1 disabled:opacity-70 disabled:cursor-not-allowed">
+                          {isSubmittingLocal ? 'Processing Application...' : 'Get Free Membership'}
                       </button>
                     </div>
                 </form>
@@ -215,6 +226,7 @@ const ActiveMemberForm = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [screenshotPreview, setScreenshotPreview] = useState('');
+  const [isSubmittingLocal, setIsSubmittingLocal] = useState(false);
 
   const toBase64 = file => new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -242,7 +254,7 @@ const ActiveMemberForm = () => {
       .test('fileSize', 'File is too large', value => value && value[0] && value[0].size <= 2 * 1024 * 1024) // 2MB limit
   }), [t]);
 
-  const { register, handleSubmit, formState: { errors, isSubmitting }, reset, watch } = useForm({
+  const { register, handleSubmit, formState: { errors }, reset, watch } = useForm({
     resolver: yupResolver(schema),
     defaultValues: { gender: '', amount: 501, modeOfPayment: 'UPI' }
   });
@@ -261,7 +273,13 @@ const ActiveMemberForm = () => {
   const onSubmit = async (data) => {
     setError('');
     setSuccess('');
-    
+    setIsSubmittingLocal(true);
+
+    const fallbackTimer = window.setTimeout(() => {
+      setIsSubmittingLocal(false);
+      setError('The server is taking longer than usual. Please wait a moment and try again if it does not complete.');
+    }, 12000);
+
     try {
       if (!data.paymentScreenshot || data.paymentScreenshot.length === 0) {
         setError(t.form.validation.screenshot_required);
@@ -276,18 +294,22 @@ const ActiveMemberForm = () => {
         paymentScreenshot: screenshotBase64,
         membershipPlan: 'active'
       };
-      
+
       const result = await apiRequest('/api/members', {
         method: 'POST',
         body: payload,
       });
 
-      const successMessage = result.message || 'Your application has been submitted successfully! We will verify and get back to you soon.';
+      const successMessage = result?.message || 'Your application has been submitted successfully! We will verify and get back to you soon.';
       setSuccess(successMessage);
       reset();
       setScreenshotPreview('');
     } catch (err) {
-      setError(err.message);
+      const fallbackError = err?.message || 'We could not submit your application right now. Please try again later.';
+      setError(fallbackError);
+    } finally {
+      window.clearTimeout(fallbackTimer);
+      setIsSubmittingLocal(false);
     }
   };
 
@@ -499,8 +521,8 @@ const ActiveMemberForm = () => {
                 </div>
 
                 <div className="pt-4">
-                  <button type="submit" disabled={isSubmitting} className="w-full inline-flex justify-center items-center gap-3 rounded-full bg-gradient-to-r from-[#F97316] to-[#EA580C] px-8 py-4 text-lg font-bold text-white shadow-lg transition-all duration-300 hover:shadow-2xl hover:shadow-orange-500/40 hover:-translate-y-1 disabled:opacity-70 disabled:cursor-not-allowed">
-                    {isSubmitting ? 'Submitting Application...' : 'Submit Active Membership'}
+                  <button type="submit" disabled={isSubmittingLocal} className="w-full inline-flex justify-center items-center gap-3 rounded-full bg-gradient-to-r from-[#F97316] to-[#EA580C] px-8 py-4 text-lg font-bold text-white shadow-lg transition-all duration-300 hover:shadow-2xl hover:shadow-orange-500/40 hover:-translate-y-1 disabled:opacity-70 disabled:cursor-not-allowed">
+                    {isSubmittingLocal ? 'Submitting Application...' : 'Submit Active Membership'}
                   </button>
                 </div>
               </form>
