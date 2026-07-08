@@ -205,12 +205,12 @@ const Team = () => {
               <p className="text-xl text-blue-100 mb-10 leading-relaxed">
                 Join our growing family of changemakers. Whether you can give a few hours a month or want to lead a project, we have a place for you.
               </p>
-              <a 
-                href="/membership" 
+              <Link 
+                to="/membership" 
                 className="inline-flex justify-center items-center gap-3 rounded-full bg-gradient-to-r from-[#F97316] to-[#EA580C] px-8 py-4 text-lg font-bold text-white shadow-lg transition-all duration-300 hover:shadow-2xl hover:shadow-orange-500/40 hover:-translate-y-1"
               >
                 Become a Volunteer <FaArrowRight />
-              </a>
+              </Link>
             </div>
           </motion.div>
 

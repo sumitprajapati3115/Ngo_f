@@ -112,8 +112,8 @@ const Navbar = () => {
               {t.login}
             </NavLink>
 
-            <a 
-              href="/donate" 
+            <NavLink 
+              to="/donate" 
               className="relative flex h-10 items-center justify-center rounded-full bg-gradient-to-r from-[#F97316] to-[#EA580C] px-6 text-sm font-extrabold text-white shadow-[0_4px_14px_rgba(249,115,22,0.4)] transition-all hover:scale-105 hover:shadow-[0_6px_20px_rgba(249,115,22,0.6)]"
             >
               {t.donate_now}
@@ -121,7 +121,7 @@ const Navbar = () => {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-3 w-3 bg-white"></span>
               </span>
-            </a>
+            </NavLink>
           </div>
 
           {/* Mobile Menu Toggle Button */}
@@ -184,9 +184,9 @@ const Navbar = () => {
               </div>
 
               <div className="p-5 border-t border-slate-100 bg-slate-50 space-y-3">
-                <a href="/donate" className="flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-[#F97316] to-[#EA580C] px-4 py-4 text-center text-base font-extrabold text-white shadow-[0_4px_14px_rgba(249,115,22,0.4)]">
+                <NavLink to="/donate" onClick={() => setIsMenuOpen(false)} className="flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-[#F97316] to-[#EA580C] px-4 py-4 text-center text-base font-extrabold text-white shadow-[0_4px_14px_rgba(249,115,22,0.4)]">
                   {t.donate_now}
-                </a>
+                </NavLink>
                 <div className="grid grid-cols-2 gap-3">
                   <button
                     onClick={toggleLanguage}

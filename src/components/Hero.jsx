@@ -1,4 +1,5 @@
 ﻿import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from './LanguageContext.jsx';
 import { translations } from './translations.js';
@@ -65,12 +66,12 @@ export default function Hero() {
             transition={{ duration: 0.8, delay: 0.3, ease: 'easeOut' }}
             className="flex flex-wrap justify-start gap-4"
           >
-            <a href="/membership" className="rounded-full bg-gradient-to-r from-[#F97316] to-[#EA580C] px-8 py-3 text-sm font-semibold text-white shadow-2xl transition-transform hover:scale-105">
+            <Link to="/membership" className="rounded-full bg-gradient-to-r from-[#F97316] to-[#EA580C] px-8 py-3 text-sm font-semibold text-white shadow-2xl transition-transform hover:scale-105">
               {t.hero.join_now}
-            </a>
-            <a href="/donate" className="rounded-full border border-white/40 bg-white/10 px-8 py-3 text-sm font-semibold text-white transition-transform hover:scale-105 hover:bg-white/20">
+            </Link>
+            <Link to="/donate" className="rounded-full border border-white/40 bg-white/10 px-8 py-3 text-sm font-semibold text-white transition-transform hover:scale-105 hover:bg-white/20">
               {t.donate_now}
-            </a>
+            </Link>
             <a href="#about" className="rounded-full border border-[#FFD54F]/40 bg-[#FFD54F]/10 px-8 py-3 text-sm font-semibold text-[#FFD54F] transition-transform hover:scale-105 hover:bg-[#FFD54F]/20">
               {t.hero.learn_more}
             </a>

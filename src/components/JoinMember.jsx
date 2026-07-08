@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from './LanguageContext.jsx';
 import { translations } from './translations.js';
@@ -58,9 +59,9 @@ export default function JoinMember() {
               </div>
               <p className="mt-6 text-slate-600">{t.free_member_desc}</p>
             </div>
-            <a href="/membership" className="mt-8 block w-full rounded-full border-2 border-[#0B2F78] px-6 py-3 text-center font-semibold text-[#0B2F78] transition-colors hover:bg-[#0B2F78] hover:text-white">
+            <Link to="/membership" className="mt-8 block w-full rounded-full border-2 border-[#0B2F78] px-6 py-3 text-center font-semibold text-[#0B2F78] transition-colors hover:bg-[#0B2F78] hover:text-white">
               {t.form.join_now}
-            </a>
+            </Link>
           </motion.div>
 
           {/* Active Member Card */}
@@ -89,9 +90,9 @@ export default function JoinMember() {
                 <li className="flex items-center gap-3"><svg className="h-5 w-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>Access to Dashboard</li>
               </ul>
             </div>
-            <a href="/membership" className="mt-auto block w-full rounded-full bg-gradient-to-r from-[#F97316] to-[#EA580C] px-6 py-3 text-center font-semibold text-white shadow-lg transition-transform hover:scale-105">
+            <Link to="/membership" className="mt-auto block w-full rounded-full bg-gradient-to-r from-[#F97316] to-[#EA580C] px-6 py-3 text-center font-semibold text-white shadow-lg transition-transform hover:scale-105">
               Become an Active Member
-            </a>
+            </Link>
           </motion.div>
         </div>
       </div>

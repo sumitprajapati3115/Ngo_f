@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useLanguage } from './LanguageContext.jsx';
 import { translations } from './translations.js';
@@ -59,9 +60,9 @@ export default function About() {
                 </motion.div>
               ))}
             </div>
-             <a href="/about" className="mt-10 inline-block rounded-full bg-gradient-to-r from-[#0B2F78] to-[#132B6B] px-8 py-3 text-base font-semibold text-white shadow-lg transition-transform hover:scale-105">
+             <Link to="/about" className="mt-10 inline-block rounded-full bg-gradient-to-r from-[#0B2F78] to-[#132B6B] px-8 py-3 text-base font-semibold text-white shadow-lg transition-transform hover:scale-105">
                 {t.about.learn_more}
-            </a>
+            </Link>
           </motion.div>
         </div>
       </div>
