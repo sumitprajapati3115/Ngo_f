@@ -31,7 +31,7 @@ const ContactDetails = React.lazy(() => import('../pages/admin/ContactDetails.js
 
 const AppRoutes = () => {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Suspense fallback={<Loader />}>
         <Routes>
           <Route path="/" element={<App />}>
@@ -70,7 +70,7 @@ const AppRoutes = () => {
           </Route>
         </Routes>
       </Suspense>
-    </BrowserRouter>
+    </HashRouter>
   );
 };
 
